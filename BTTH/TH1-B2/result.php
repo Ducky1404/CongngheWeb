@@ -1,32 +1,31 @@
 <?php
-$filename = __DIR__ . "/questions.txt"; 
+$filename = "questions.txt";
+
 if (!file_exists($filename)) {
-    die("Tệp câu hỏi không tồn tại! Vui lòng kiểm tra lại.");
+    die("Tệp câu hỏi không tồn tại!");
 }
 
-$questions = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES); 
-if ($questions === false) {
-    die("Không thể đọc tệp câu hỏi. Vui lòng kiểm tra quyền truy cập.");
-}
+$questions = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-$answers = []; 
+// Khởi tạo mảng $answers để lưu đáp án
+$answers = [];
+
 foreach ($questions as $line) {
-    if (strpos($line, "ANSWER:") !== false) { 
+    if (strpos($line, "ANSWER:") !== false) {
         $answers[] = trim(substr($line, strpos($line, ":") + 1));
     }
 }
 
-$score = 0; 
-$totalQuestions = count($answers); 
-$userAnswers = $_POST; 
+$score = 0;
+$totalQuestions = count($answers);
+
+$userAnswers = $_POST;
 
 foreach ($userAnswers as $key => $value) {
-  
     $questionNumber = (int)filter_var($key, FILTER_SANITIZE_NUMBER_INT);
 
-  
     if (isset($answers[$questionNumber - 1]) && $answers[$questionNumber - 1] === $value) {
-        $score++; 
+        $score++;
     }
 }
 ?>
@@ -43,7 +42,7 @@ foreach ($userAnswers as $key => $value) {
 <div class="container mt-5">
     <div class="alert alert-success text-center">
         <h2>Kết Quả Bài Thi</h2>
-        <p>Bạn trả lời đúng <strong><?= $score ?></strong> / <?= $totalQuestions ?> câu.</p>
+        <p>Bạn trả lời đúng <strong><?php echo $score; ?></strong> / <?php echo $totalQuestions; ?> câu.</p>
     </div>
     <div class="text-center">
         <a href="quiz.php" class="btn btn-primary">Làm lại</a>
