@@ -60,11 +60,10 @@ $flowers = getFlowers();
     </header>
 
     <main>
-        <?php foreach ($flowers as $flower): ?>
+        <?php foreach ($flowers as $index => $flower): ?>
             <div class="flower-section">
                 <img src="<?= $flower['image'] ?>" alt="<?= $flower['name'] ?>">
-                <img src="<?= $flower['image2'] ?>" alt="<?= $flower['name'] ?>">
-                <h2><?= $flower['name'] ?></h2>
+                <h2><?= $index + 1 ?>. <?= $flower['name'] ?></h2>
                 <p><?= $flower['description'] ?></p>
             </div>
         <?php endforeach; ?>

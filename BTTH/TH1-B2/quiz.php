@@ -1,22 +1,19 @@
 <?php
-$filename = __DIR__ . "/questions.txt"; 
-if (!file_exists($filename)) {
-    die("Tệp câu hỏi không tồn tại! Vui lòng kiểm tra lại.");
+$filename = "questions.txt";
+
+$questions = [];
+if (file_exists($filename)) {
+    $questions = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 }
 
-$questions = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES); 
-if ($questions === false) {
-    die("Không thể đọc tệp câu hỏi. Vui lòng kiểm tra quyền truy cập.");
-}
-
-$parsedQuestions = []; 
-$currentQuestion = []; 
+$parsedQuestions = [];
+$currentQuestion = [];
 
 foreach ($questions as $line) {
-    if (preg_match('/^ANSWER:/', $line)) { 
-        $currentQuestion[] = $line; 
-        $parsedQuestions[] = $currentQuestion; 
-        $currentQuestion = []; 
+    if (strpos($line, 'ANSWER:') === 0) {
+        $currentQuestion[] = $line;
+        $parsedQuestions[] = $currentQuestion;
+        $currentQuestion = [];
     } else {
         $currentQuestion[] = $line;
     }
@@ -38,21 +35,21 @@ foreach ($questions as $line) {
         <?php foreach ($parsedQuestions as $index => $question): ?>
             <div class="card mb-4">
                 <div class="card-header">
-                    <strong><?= htmlspecialchars($question[0]) ?></strong>
+                    <strong><?= $question[0] ?></strong>
                 </div>
                 <div class="card-body">
                     <?php for ($i = 1; $i < count($question) - 1; $i++): ?>
                         <?php
-                        $answerLetter = substr($question[$i], 0, 1); 
+                        $answerLetter = substr($question[$i], 0, 1); // Lấy ký tự đầu tiên (A, B, C, D)
                         ?>
                         <div class="form-check">
-                            <input class="form-check-inline" type="radio" 
-                                   name="question<?= $index + 1 ?>" 
-                                   value="<?= $answerLetter ?>" 
+                            <input class="form-check-inline" type="radio"
+                                   name="question<?= $index + 1 ?>"
+                                   value="<?= $answerLetter ?>"
                                    id="question<?= $index + 1 . $answerLetter ?>">
-                            <label class="form-check-label" 
+                            <label class="form-check-label"
                                    for="question<?= $index + 1 . $answerLetter ?>">
-                                <?= htmlspecialchars($question[$i]) ?>
+                                <?= $question[$i] ?>
                             </label>
                         </div>
                     <?php endfor; ?>
