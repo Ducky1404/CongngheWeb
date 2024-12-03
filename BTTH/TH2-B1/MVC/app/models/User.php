@@ -45,18 +45,4 @@ class User{
     public function setRole($role){
         $this->role = $role;
     }
-
-    public static function findByUsername($username)
-    {
-        // Kết nối cơ sở dữ liệu và tìm người dùng theo tên đăng nhập
-        $db = Database::connect();
-        $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $userData = $stmt->fetch();
-
-        if ($userData) {
-            return new self($userData['id'], $userData['username'], $userData['password'], $userData['role']);
-        }
-        return null; // Không tìm thấy user
-    }
 }
