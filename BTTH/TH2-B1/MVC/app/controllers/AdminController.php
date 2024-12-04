@@ -1,55 +1,91 @@
 <?php
+
 require_once APP_ROOT . '/app/services/NewsService.php';
-require_once APP_ROOT . '/app/models/News.php';
-require_once APP_ROOT . '/app/services/UserService.php';
+require_once APP_ROOT . '/app/services/CategoryService.php';
 
-class AdminController
-{
-    public function connect()
-    {
-        try {
-            $conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8", DB_USER, DB_PASS);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $conn;
-        } catch (PDOException $e) {
-            die("Kết nối thất bại: " . $e->getMessage());
-        }
+class AdminController {
+    private $newsService;
+    private $categoryService;
+
+    public function __construct() {
+        $this->newsService = new NewsService();
+        $this->categoryService = new CategoryService();
     }
 
-    public function login()
-    {
-        if (isset($_POST['login'])) {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $userService = new UserService();
-            $result = $userService->login($username, $password);
-            if (isset($result['error'])) {
-                echo $result['error'];
-            }
+    public function news() {
+        session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=login');
+            exit;
         }
+
+        $newsList = $this->newsService->getAllNews();
+        require_once APP_ROOT . '/app/views/admin/news/index.php';
     }
 
-    public function getAllNews()
-    {
-        $conn = $this->connect();
-        $stmt = $conn->prepare("SELECT * FROM news");
-        $stmt->execute();
-        $newsData = $stmt->fetchAll();
-        $news = [];
-        foreach ($newsData as $item) {
-            $news[] = new News($item['id'], $item['title'], $item['content'], $item['image'], $item['created_at'], $item['category_id']);
+    public function edit($id) {
+        session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=login');
+            exit;
         }
-        return $news;
+
+        $news = $this->newsService->getNewsById($id);
+        $categories = $this->categoryService->getAllCategory();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $image = $_POST['image'];
+            $category_id = $_POST['category_id'];
+
+            $this->newsService->updateNews($id, $title, $content, $image, $category_id);
+
+            header('Location: ' . DOMAIN . '/index.php?controller=admin&action=news');
+            exit;
+        }
+
+        require_once APP_ROOT . '/app/views/admin/news/edit.php';
     }
 
-    public function search()
-    {
-        if (isset($_GET['query'])) {
-            $term = $_GET['query'];
-            $newsService = new NewsService();
-            $news = $newsService->searchNews($term);
-            require_once APP_ROOT . '/app/views/home/index.php'; // Chuyển kết quả tìm kiếm vào home/index.php
+    public function delete($id) {
+        session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=login');
+            exit;
         }
+
+        $this->newsService->deleteNews($id);
+
+        header('Location: ' . DOMAIN . '/index.php?controller=admin&action=news');
+        exit;
+    }
+
+    public function add() {
+        session_start();
+
+        if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=login');
+            exit;
+        }
+
+        $categories = $this->categoryService->getAllCategory();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $image = $_POST['image'];
+            $category_id = $_POST['category_id'];
+
+            $this->newsService->addNews($title, $content, $image, $category_id);
+
+            header('Location: ' . DOMAIN . '/index.php?controller=admin&action=news');
+            exit;
+        }
+
+        require_once APP_ROOT . '/app/views/admin/news/add.php';
     }
 }
-?>

@@ -10,7 +10,7 @@ class Category
         $this->name = $name;
     }
 
-    //getters & setters
+    // Getters & Setters
     public function getId()
     {
         return $this->id;
@@ -29,17 +29,5 @@ class Category
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public static function getALlCategory()
-    {
-        $db = Database::connect();
-        $stmt = $db->prepare("SELECT * FROM categories");
-        $stmt->execute();
-        $categories = [];
-        while ($category = $stmt->fetch()) {
-            $categories[] = new self($category['id'], $category['name']);
-        }
-        return $categories;
     }
 }

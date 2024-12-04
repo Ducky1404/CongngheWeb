@@ -50,5 +50,23 @@ class NewsService
         }
         return null;
     }
+    public function updateNews($id, $title, $content, $image, $category_id)
+    {
+        $conn = $this->connect();
+        $stmt = $conn->prepare("UPDATE news SET title = ?, content = ?, image = ?, category_id = ? WHERE id = ?");
+        $stmt->execute([$title, $content, $image, $category_id, $id]);
+    }
+    public function deleteNews($id)
+    {
+        $conn = $this->connect();
+        $stmt = $conn->prepare("DELETE FROM news WHERE id = ?");
+        $stmt->execute([$id]);
+    }
+    public function addNews($title, $content, $image, $category_id)
+    {
+        $conn = $this->connect();
+        $stmt = $conn->prepare("INSERT INTO news (title, content, image, category_id) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$title, $content, $image, $category_id]);
+    }
 }
 ?>
