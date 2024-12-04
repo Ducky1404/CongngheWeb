@@ -5,15 +5,21 @@ RewriteBase /MVC/public/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&action=$2 [QSA,L]
+<<<<<<< HEAD
 
 # Quy tắc cho các URL logout và login
+=======
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
 RewriteRule ^logout$ index.php?controller=home&action=logout [QSA,L]
 RewriteRule ^login$ index.php?controller=home&action=login [QSA,L]
 
 # Quy tắc này là để xử lý các URL khác
 RewriteRule ^(.*)$ index.php [QSA,L]
+<<<<<<< HEAD
 
 # Thêm quy tắc cho phép truy cập tài nguyên tĩnh (images, css, js)
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_FILENAME} \.(jpg|jpeg|png|gif|css|js|bmp|svg|webp)$ [NC]
 RewriteRule ^(.*)$ - [L]
+=======
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10

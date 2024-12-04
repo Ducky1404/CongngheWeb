@@ -3,8 +3,15 @@ require_once APP_ROOT . '/app/services/NewsService.php';
 
 session_start();
 
+<<<<<<< HEAD
 // Kiểm tra nếu có tham số action trong URL
 if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+=======
+
+// Kiểm tra nếu có tham số action trong URL
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    // Đăng xuất người dùng
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
     session_start();
     session_unset(); // Hủy session
     session_destroy(); // Hủy session
@@ -12,6 +19,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
     exit;
 }
 
+<<<<<<< HEAD
 // Kiểm tra nếu người dùng đã đăng nhập
 $isLoggedIn = isset($_SESSION['user_id']);
 
@@ -19,6 +27,18 @@ $isLoggedIn = isset($_SESSION['user_id']);
 if ($isLoggedIn && $_SESSION['role'] == 1) {
     echo '<p>Welcome Admin! <a href="' . DOMAIN . '/index.php?controller=admin&action=dashboard">Go to Dashboard</a></p>';
 } elseif ($isLoggedIn && $_SESSION['role'] == 0) {
+=======
+
+// Kiểm tra nếu người dùng đã đăng nhập
+$isLoggedIn = isset($_SESSION['user_id']); // Kiểm tra xem người dùng có session 'user_id' hay không
+
+// Kiểm tra role của người dùng nếu đã đăng nhập
+if ($isLoggedIn && $_SESSION['role'] == 1) {
+    // Nếu là Admin, hiển thị thông tin đặc biệt cho Admin (ví dụ, đường dẫn đến dashboard)
+    echo '<p>Welcome Admin! <a href="' . DOMAIN . '/index.php?controller=admin&action=dashboard">Go to Dashboard</a></p>';
+} elseif ($isLoggedIn && $_SESSION['role'] == 0) {
+    // Nếu là User, hiển thị thông tin cho người dùng bình thường
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
     echo '<p>Welcome User! Enjoy the latest news.</p>';
 }
 
@@ -140,7 +160,11 @@ $news = ($searchQuery) ? $newsService->searchNews($searchQuery) : $newsService->
 </head>
 <body>
 <header>
+<<<<<<< HEAD
     <nav class="navbar navbar-expand-lg bg-warning text-dark">
+=======
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
         <div class="container-fluid">
             <a class="navbar-brand" href="<?= DOMAIN; ?>">Tlu News</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,6 +176,7 @@ $news = ($searchQuery) ? $newsService->searchNews($searchQuery) : $newsService->
                         <a class="nav-link active" aria-current="page" href="<?= DOMAIN; ?>">Home</a>
                     </li>
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link" href="#">Student</a>
                     </li>
                     <li class="nav-item">
@@ -179,10 +204,68 @@ $news = ($searchQuery) ? $newsService->searchNews($searchQuery) : $newsService->
                         <span class="me-2">Hello, <?= $_SESSION['username']; ?></span>
                         <a href="<?= DOMAIN . '/index.php?controller=home&action=logout'; ?>" class="btn btn-danger">Logout</a>
                     <?php else: ?>
+=======
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <!-- Thanh tìm kiếm -->
+                <form class="d-flex" action="<?= DOMAIN . '/index.php' ?>" method="GET">
+                    <input class="form-control me-2" type="search" placeholder="Search" name="query" aria-label="Search" required>
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+
+                <!-- Nút đăng nhập/đăng xuất -->
+                <div class="d-flex ms-3">
+                    <?php if ($isLoggedIn): ?>
+                        <!-- Nếu đã đăng nhập, hiển thị nút logout -->
+                        <span class="me-2">Hello, <?= $_SESSION['username']; ?></span>
+                        <a href="<?= DOMAIN . '/index.php?controller=home&action=logout'; ?>" class="btn btn-danger">Logout</a>
+                    <?php else: ?>
+                        <!-- Nếu chưa đăng nhập, hiển thị nút login -->
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
                         <a href="<?= DOMAIN . '/index.php?controller=home&action=login'; ?>" class="btn btn-primary">Login</a>
                     <?php endif; ?>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+        </div>
+    </nav>
+</header>
+
+<main>
+    <h3 class="text-center">Tin tức mới nhất</h3>
+
+    <!-- Hiển thị kết quả tìm kiếm hoặc tất cả tin tức -->
+    <div class="row row-cols-1 row-cols-md-1 g-4" style="margin:50px 100px 50px 100px ">
+        <?php if ($searchQuery): ?>
+            <h4>Kết quả tìm kiếm cho: <?= htmlspecialchars($searchQuery); ?></h4>
+        <?php endif; ?>
+
+        <?php foreach ($news as $item): ?>
+            <ul class="list-unstyled" style="display: flex; align-items: center; padding: 0; margin: 0;">
+                <li class="media" style="display: flex; align-items: center; width: 100%; padding: 10px; border-bottom: 1px solid #ccc;">
+                    <a href="<?= DOMAIN . '/news/details.php?id=' . $item->getId(); ?>" style="display: flex; width: 100%; text-decoration: none; color: inherit;">
+                        <img class="mr-3" src="<?= $item->getImage(); ?>" alt="Generic placeholder image" style="width: 80px; height: 80px; object-fit: cover; margin-right: 15px;">
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1"><?= $item->getTitle(); ?></h5>
+                            <p><?= substr($item->getContent(), 0, 100); ?>...</p>  <!-- Chỉ hiển thị đoạn trích -->
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        <?php endforeach; ?>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer">
+            <p>Made by Đức - <strong>Foreign Trade University</strong></p>
+>>>>>>> 8a159fd1e261f8221b645fb6636ca7eb87aa4c10
         </div>
     </nav>
 </header>
