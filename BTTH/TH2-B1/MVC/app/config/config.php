@@ -1,7 +1,7 @@
 <?php
 
 define('APP_ROOT', dirname(__FILE__, 3)); // Địa chỉ máy chủ
-define('DOMAIN','http://localhost/MVC/');
+define('DOMAIN', 'http://localhost/MVC/public'); // Đảm bảo rằng bạn sử dụng public/ là root folder
 
 define('DB_HOST', 'localhost'); // Địa chỉ máy chủ
 define('DB_NAME', 'tintuc');    // Tên cơ sở dữ liệu
