@@ -15,7 +15,13 @@ class AdminController
             die("Kết nối thất bại: " . $e->getMessage());
         }
     }
-
+    public function manage() {
+        // Load the Manage view
+        require_once APP_ROOT . '/app/views/admin/manage.php';
+    }
+    public function dashboard() {
+        require_once APP_ROOT . '/app/views/admin/dashboard.php';
+    }
     public function login()
     {
         if (isset($_POST['login'])) {
