@@ -5,6 +5,9 @@ session_start();
 $isLoggedIn = isset($_SESSION['user_id']);
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : null;
 
+$newsService = new NewsService();
+$news = $newsService->getAllNews();
+
 // Xử lý tìm kiếm
 $searchQuery = isset($_GET['query']) ? $_GET['query'] : '';
 $newsService = new NewsService();
@@ -60,7 +63,7 @@ $news = ($searchQuery) ? $newsService->searchNews($searchQuery) : $newsService->
         <?php foreach ($news as $item): ?>
             <div class="col">
                 <div class="media">
-                    <a href="<?= DOMAIN . '/news/details.php?id=' . $item->getId(); ?>" style="display: flex; width: 100%; text-decoration: none;">
+                    <a href="<?= DOMAIN . '/index.php?controller=news&action=detail&id=' . $item->getId(); ?>" style="display: flex; width: 100%; text-decoration: none;">
                         <img class="mr-3" src="<?= $item->getImage(); ?>" alt="News Image" style="width: 100px; height: 100px;">
                         <div class="media-body">
                             <h5 class="mt-0 mb-1"><?= $item->getTitle(); ?></h5>
