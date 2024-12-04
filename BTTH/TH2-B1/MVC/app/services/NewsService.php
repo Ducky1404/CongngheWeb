@@ -39,5 +39,16 @@ class NewsService
         }
         return $news;
     }
+
+    public function getNewsById($id) {
+        $conn = $this->connect();
+        $stmt = $conn->prepare("SELECT * FROM news WHERE id = ?");
+        $stmt->execute([$id]);
+        $newsData = $stmt->fetch();
+        if ($newsData) {
+            return new News($newsData['id'], $newsData['title'], $newsData['content'], $newsData['image'], $newsData['created_at'], $newsData['category_id']);
+        }
+        return null;
+    }
 }
 ?>
