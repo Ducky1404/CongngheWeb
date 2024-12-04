@@ -1,35 +1,30 @@
 <?php
 session_start();
-require_once '../app/config/config.php';
+require_once APP_ROOT . '/app/config/config.php';
 require_once APP_ROOT . '/app/services/UserService.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Khởi tạo UserService và xử lý đăng nhập
     $userService = new UserService();
     $loginResult = $userService->login($username, $password);
 
-    if ($loginResult === true) {
-        // Đăng nhập thành công, lưu thông tin vào session
-        $_SESSION['user_id'] = $loginResult['user_id']; // Giả sử login trả về user_id
-        $_SESSION['username'] = $username;
-        $_SESSION['role'] = $loginResult['role']; // Lưu role vào session
-
-        // Kiểm tra vai trò và điều hướng
-        if ($_SESSION['role'] == 1) { // Admin
-            header('Location: ' . DOMAIN . '/app/views/admin/dashboard.php');
-        } else { // User
-            header('Location: ' . DOMAIN . '/app/views/home/index.php');
-        }
-        exit; // Dừng lại sau khi điều hướng
+    if (isset($loginResult['error'])) {
+        $errorMessage = $loginResult['error'];
     } else {
-        // Lỗi đăng nhập, hiển thị thông báo lỗi
-        $error = $loginResult['error'];
+        $_SESSION['user_id'] = $loginResult['user_id'];
+        $_SESSION['username'] = $username;
+        $_SESSION['role'] = $loginResult['role'];
+
+        if ($_SESSION['role'] == 1) {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=dashboard');
+        } else {
+            header('Location: ' . DOMAIN . '/index.php?controller=home&action=index');
+        }
+        exit;
     }
 }
-
 ?>
 
 <!doctype html>
