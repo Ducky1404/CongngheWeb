@@ -51,19 +51,28 @@ class UserService {
             $_SESSION['username'] = $user->getUsername();
             $_SESSION['role'] = $user->getRole(); // Lưu role từ cơ sở dữ liệu
 
-            return true;
+            // Điều hướng dựa trên role
+            if ($user->getRole() == 1) {
+                // Admin vào dashboard
+                header('Location: ' . DOMAIN . '/app/views/admin/dashboard.php');
+            } else {
+                // User vào trang chủ
+                header('Location: ' . DOMAIN . '/home/index.php');
+            }
+            exit;
         }
 
         return ['error' => 'Sai mật khẩu.'];
     }
 
-
-    // Đăng xuất
+    // Phương thức logout
     public function logout() {
-        session_start();
-        session_unset();
-        session_destroy();
-        header('Location: ' . DOMAIN . 'app/views/admin/login.php');
+        session_start(); // Khởi động session
+        session_unset(); // Xóa tất cả dữ liệu session
+        session_destroy(); // Hủy session
+
+        // Điều hướng về trang chủ sau khi đăng xuất
+        header('Location: ' . DOMAIN . '/home/index');
         exit;
     }
 }

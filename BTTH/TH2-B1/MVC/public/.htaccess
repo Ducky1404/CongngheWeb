@@ -1,4 +1,12 @@
 RewriteEngine On
+RewriteBase /MVC/public/
+
+# Quy tắc để xử lý URL dạng /controller/action
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&action=$2 [QSA,L]
+RewriteRule ^logout$ index.php?controller=home&action=logout [QSA,L]
+RewriteRule ^login$ index.php?controller=home&action=login [QSA,L]
+
+# Quy tắc này là để xử lý các URL khác
+RewriteRule ^(.*)$ index.php [QSA,L]
