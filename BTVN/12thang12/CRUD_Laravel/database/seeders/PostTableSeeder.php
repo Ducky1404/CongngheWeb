@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use faker\Factory as Faker;
+use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 
 class PostTableSeeder extends Seeder
@@ -14,13 +14,13 @@ class PostTableSeeder extends Seeder
      */
     public function run(): void
     {
-        //su dung fake du lieu
-        $faker= Faker::create('vi');
+        // su dung fake du lieu;
+        $faker = Faker::create('vi');
 
-        //sinhdulieu
-        for($i=0; $i<100; $i++){
+        // sinh du lieu;
+        for ($i = 0; $i < 100; $i++) {
             DB::table('posts')->insert([
-                'title' =>$faker->name,
+                'title' => $faker->name,
                 'content' => $faker->text,
                 'created_at' => now(),
                 'updated_at' => now(),
